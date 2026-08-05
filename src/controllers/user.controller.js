@@ -118,12 +118,11 @@ const loginUser=asyncHandler(async(req,res)=>{
    //password check
    //access and refresh token
    //send cookie
-
+console.log("===== REGISTER CONTROLLER CALLED =====");
     const {email,username,password}=req.body
-    if(!(username && email)){
-      throw new ApiError(400,"username or email is required")
-    }
-
+  if (!(username || email)) {
+    throw new ApiError(400, "Username or email is required");
+}
   const user= await User.findOne({
       $or:[{username},{email}]
     })
@@ -171,8 +170,8 @@ const logoutUser=asyncHandler(async(req,res)=>{
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set:{
-        refreshToken:undefined
+      $unset:{
+        refreshToken:1
       }
     },
     {
